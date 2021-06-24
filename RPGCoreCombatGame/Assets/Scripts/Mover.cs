@@ -7,21 +7,30 @@ public class Mover : MonoBehaviour
 {
     private NavMeshAgent playerNavMeshAgent;
 
-    [SerializeField] private Transform targetTransform;
-
     void Start()
     {
         playerNavMeshAgent = GetComponent<NavMeshAgent>();
-
-        playerNavMeshAgent.SetDestination(targetTransform.position);
     }
 
     void Update()
     {
-        if(playerNavMeshAgent.remainingDistance > 0)
+        if(Input.GetMouseButtonDown(0))
         {
-            playerNavMeshAgent.SetDestination(targetTransform.position);
+            MoveToCursor();
         }
-        
+    }
+
+
+    void MoveToCursor()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        bool isHit = Physics.Raycast(ray, out hit);
+
+        if(isHit)
+        {
+            playerNavMeshAgent.SetDestination(hit.point);
+        }
     }
 }
