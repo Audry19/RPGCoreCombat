@@ -7,6 +7,9 @@ public class Mover : MonoBehaviour
 {
     private NavMeshAgent playerNavMeshAgent;
 
+    [SerializeField]
+    private Animator characterAnimation;
+
     void Start()
     {
         playerNavMeshAgent = GetComponent<NavMeshAgent>();
@@ -14,12 +17,13 @@ public class Mover : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButton(0))
         {
             MoveToCursor();
         }
-    }
 
+        UpdateAnimator();
+    }
 
     void MoveToCursor()
     {
@@ -32,5 +36,16 @@ public class Mover : MonoBehaviour
         {
             playerNavMeshAgent.SetDestination(hit.point);
         }
+    }
+
+
+    void UpdateAnimator()
+    {
+        Vector3 velocity = playerNavMeshAgent.velocity;
+        Vector3 localVelocity = transform.InverseTransformDirection(velocity);
+
+        float speed = localVelocity.z;
+
+        characterAnimation.SetFloat("forwardSpeed", speed);
     }
 }
